@@ -69,6 +69,7 @@ Options:
     --wildcard                               Create a site with wildcard subdomains.
     --route-53-key[=ROUTE-53-KEY]            AWS Route 53 key for wildcard subdomains SSL certificate.
     --route-53-secret[=ROUTE-53-SECRET]      AWS Route 53 secret for wildcard subdomains SSL certificate.
+		--name																		The unique name for used in this deployment
 ```
 
 > **Note**: the `deploy` command can be run multiple times and will skip any steps that have already been run previously.

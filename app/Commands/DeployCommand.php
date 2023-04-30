@@ -82,7 +82,7 @@ class DeployCommand extends Command
 		if (!empty($this->getEnvOverrides())) {
 			$this->information('Updating environment variables');
 
-			$envSource = $forge->siteEnvironmentFile($server->id, $site->id);
+			$envSource = $forge->siteEnvironmentFile($server->id, $site->id) ?? '';
 
 			foreach ($this->getEnvOverrides() as $env) {
 				[$key, $value] = explode(':', $env, 2);
@@ -171,21 +171,6 @@ class DeployCommand extends Command
 			'user' => $this->getDatabaseUserName(),
 			'password' => $this->getDatabasePassword(),
 		]);
-
-		$this->information('Updating site environment variables');
-
-		$env = $this->forge->siteEnvironmentFile($server->id, $site->id);
-		$env = preg_replace([
-			"/DB_DATABASE=.*/",
-			"/DB_USERNAME=.*/",
-			"/DB_PASSWORD=.*/",
-		], [
-				"DB_DATABASE={$this->getDatabaseName()}",
-				"DB_USERNAME={$this->getDatabaseUserName()}",
-				"DB_PASSWORD={$this->getDatabasePassword()}"
-			], $env);
-
-		$this->forge->updateSiteEnvironmentFile($server->id, $site->id, $env);
 	}
 
 	protected function maybeOutput(string $key, string $value): void
