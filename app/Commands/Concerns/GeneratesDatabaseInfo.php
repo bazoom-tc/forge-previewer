@@ -20,6 +20,6 @@ trait GeneratesDatabaseInfo
 
     protected function getDatabaseName(): string
     {
-        return str($this->getBranchName())->slug('_')->limit(64)->toString();
+        return str($this->getUniqueName())->slug('_')->limit(64)->toString();
     }
 }

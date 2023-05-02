@@ -6,6 +6,6 @@ trait GeneratesSiteInfo
 {
     protected function generateSiteDomain(): string
     {
-        return str($this->getDomainName())->toString();
+        return str($this->getUniqueName() . '.' . $this->getDomainName())->toString();
     }
 }

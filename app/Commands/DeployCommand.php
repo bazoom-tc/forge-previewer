@@ -28,6 +28,7 @@ class DeployCommand extends Command
         {--provider=github : The Git provider.}
         {--repo= : The name of the repository being deployed.}
         {--branch= : The name of the branch being deployed.}
+        {--name= : The unique name for this deployment, defaults to branch name.}
         {--domain= : The domain you\'d like to use for deployments.}
         {--php-version=php81 : The version of PHP the site should use, e.g. php81, php80, ...}
         {--setup-command=* : A command you would like to execute after configuring the git repo.}
@@ -255,22 +256,24 @@ class DeployCommand extends Command
             ]);
         }
 
-        $this->information('Generating SSL certificate');
+        if (false) {
+            $this->information('Generating SSL certificate');
 
-        $letsEncryptCertificateData = [
-            'domains' => [$this->generateSiteDomain()],
-        ];
-
-        if ($this->option('wildcard')) {
-            $letsEncryptCertificateData['domains'] = ['*.' . $this->generateSiteDomain()];
-            $letsEncryptCertificateData['dns_provider'] = [
-                'type' => 'route53',
-                'route53_key' => $this->option('route-53-key'),
-                'route53_secret' => $this->option('route-53-secret'),
+            $letsEncryptCertificateData = [
+                'domains' => [$this->generateSiteDomain()],
             ];
-        }
 
-        $this->forge->obtainLetsEncryptCertificate($server->id, $site->id, $letsEncryptCertificateData);
+            if ($this->option('wildcard')) {
+                $letsEncryptCertificateData['domains'] = ['*.' . $this->generateSiteDomain()];
+                $letsEncryptCertificateData['dns_provider'] = [
+                    'type' => 'route53',
+                    'route53_key' => $this->option('route-53-key'),
+                    'route53_secret' => $this->option('route-53-secret'),
+                ];
+            }
+
+            $this->forge->obtainLetsEncryptCertificate($server->id, $site->id, $letsEncryptCertificateData);
+        }
 
         return $site;
     }
