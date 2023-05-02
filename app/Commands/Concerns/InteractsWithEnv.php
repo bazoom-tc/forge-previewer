@@ -52,11 +52,11 @@ trait InteractsWithEnv
 
 	protected function getDatabaseUserName(): ?string
 	{
-		return $this->env('FORGE_DB_USERNAME', or: $this->option('db-username') ?? str($this->getUniqueName())->slug('_')->limit(64)->toString());
+		return $this->env('FORGE_DB_USERNAME', or: $this->option('db-username') ?? 'forge');
 	}
 
 	protected function getDatabaseName(): ?string
 	{
-		return $this->env('FORGE_DB_DATABASE', or: $this->option('db-database') ?? str($this->getUniqueName())->slug('_')->limit(64)->toString());
+		return $this->env('FORGE_DB_DATABASE', or: $this->option('db-database') ?? str($this->getBranchName())->slug('_')->limit(64)->toString());
 	}
 }

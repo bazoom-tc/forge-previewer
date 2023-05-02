@@ -22,11 +22,7 @@ class DestroyCommand extends Command
         {--server= : The ID of the target server.}
         {--repo= : The name of the repository being deployed.}
         {--branch= : The name of the branch being deployed.}
-        {--domain= : The domain you\'d like to use for deployments.}
-				{--name= : The unique name for this deployment, defaults to branch name.}
-				{--db-password= : The database password.}
-				{--db-username= : The database username.}
-				{--db-database= : The database name.}';
+        {--domain= : The domain you\'d like to use for deployments.}';
 
 	protected $description = 'Destroy a previously created preview site.';
 
@@ -74,7 +70,7 @@ class DestroyCommand extends Command
 		foreach ($forge->databaseUsers($server->id) as $databaseUser) {
 			if ($databaseUser->name === $this->getDatabaseUserName()) {
 				$this->information('Removing database user.');
-				$databaseUser->delete();
+				$database->delete();
 			}
 		}
 

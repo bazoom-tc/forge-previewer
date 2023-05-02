@@ -5,5 +5,3 @@
 .phpunit.result.cache
 .env
 composer.lock
-composer.phar
-.ignore*
