@@ -73,7 +73,7 @@ class DestroyCommand extends Command
         foreach ($forge->databaseUsers($server->id) as $databaseUser) {
             if ($databaseUser->name === $this->getDatabaseUserName()) {
                 $this->information('Removing database user.');
-                $database->delete();
+                $databaseUser->delete();
             }
         }
 
