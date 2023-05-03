@@ -74,7 +74,7 @@ class DeployCommand extends Command
             $site->updateDeploymentScript($this->replaceVariables($deploymentScript));
         }
 
-        if (! $this->option('no-db')) {
+        if (!$this->option('no-db')) {
             $this->maybeCreateDatabase($server, $site);
         }
 
@@ -113,7 +113,7 @@ class DeployCommand extends Command
     {
         $value = $this->replaceVariables($value);
 
-        if (! str_contains($source, "{$name}=")) {
+        if (!str_contains($source, "{$name}=")) {
             $source .= PHP_EOL . "{$name}={$value}";
         } else {
             $source = preg_replace("/^{$name}=[^\r\n]*/m", "{$name}={$value}", $source, 1);
@@ -124,7 +124,7 @@ class DeployCommand extends Command
 
     protected function maybeCreateScheduledJob(Server $server)
     {
-        if (! $this->option('scheduler')) {
+        if (!$this->option('scheduler')) {
             return;
         }
 
@@ -238,7 +238,7 @@ class DeployCommand extends Command
             'composer' => false,
         ]);
 
-        if (! $this->option('no-quick-deploy')) {
+        if (!$this->option('no-quick-deploy')) {
             $this->information('Enabling quick deploy');
 
             $site->enableQuickDeploy();
@@ -256,24 +256,22 @@ class DeployCommand extends Command
             ]);
         }
 
-        if (false) {
-            $this->information('Generating SSL certificate');
+        $this->information('Generating SSL certificate');
 
-            $letsEncryptCertificateData = [
-                'domains' => [$this->generateSiteDomain()],
+        $letsEncryptCertificateData = [
+            'domains' => [$this->generateSiteDomain()],
+        ];
+
+        if ($this->option('wildcard')) {
+            $letsEncryptCertificateData['domains'] = ['*.' . $this->generateSiteDomain()];
+            $letsEncryptCertificateData['dns_provider'] = [
+                'type' => 'route53',
+                'route53_key' => $this->option('route-53-key'),
+                'route53_secret' => $this->option('route-53-secret'),
             ];
-
-            if ($this->option('wildcard')) {
-                $letsEncryptCertificateData['domains'] = ['*.' . $this->generateSiteDomain()];
-                $letsEncryptCertificateData['dns_provider'] = [
-                    'type' => 'route53',
-                    'route53_key' => $this->option('route-53-key'),
-                    'route53_secret' => $this->option('route-53-secret'),
-                ];
-            }
-
-            $this->forge->obtainLetsEncryptCertificate($server->id, $site->id, $letsEncryptCertificateData);
         }
+
+        $this->forge->obtainLetsEncryptCertificate($server->id, $site->id, $letsEncryptCertificateData);
 
         return $site;
     }
