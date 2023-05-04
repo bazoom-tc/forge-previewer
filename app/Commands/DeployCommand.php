@@ -332,6 +332,6 @@ class DeployCommand extends Command
             ->append('-bazoom')
             ->append('.vercel.app');
 
-        return $vercelSiteName;
+        return str('https://')->append($vercelSiteName);
     }
 }
