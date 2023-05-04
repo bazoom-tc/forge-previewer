@@ -80,10 +80,14 @@ class DeployCommand extends Command
             $this->maybeCreateDatabase($server, $site);
         }
 
+        $envSource = $forge->siteEnvironmentFile($server->id, $site->id);
+
+        $this->information('Generating Vercel preview site environment variable');
+        $vercelEnv = $this->generateVercelSiteName();
+        $envSource = $this->updateEnvVariable('FRONTEND_URL', $vercelEnv, $envSource);
+
         if (!empty($this->getEnvOverrides())) {
             $this->information('Updating environment variables');
-
-            $envSource = $forge->siteEnvironmentFile($server->id, $site->id);
 
             foreach ($this->getEnvOverrides() as $env) {
                 [$key, $value] = explode(':', $env, 2);
@@ -91,8 +95,9 @@ class DeployCommand extends Command
                 $envSource = $this->updateEnvVariable($key, $value, $envSource);
             }
 
-            $forge->updateSiteEnvironmentFile($server->id, $site->id, $envSource);
         }
+
+        $forge->updateSiteEnvironmentFile($server->id, $site->id, $envSource);
 
         $this->information('Deploying');
 
@@ -316,5 +321,17 @@ class DeployCommand extends Command
         }
 
         return [];
+    }
+
+    private function generateVercelSiteName(): string
+    {
+        $hash = hash('sha256', str('git-')->append($this->option('branch'), 'platform'));
+        $vercelSiteName = str('platform-git-')
+            ->append($this->option('branch'))
+            ->limit(49, '-' . str($hash)->substr(0, 6))
+            ->append('-bazoom')
+            ->append('.vercel.app');
+
+        return $vercelSiteName;
     }
 }
