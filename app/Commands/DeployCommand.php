@@ -85,6 +85,7 @@ class DeployCommand extends Command
         $this->information('Generating Vercel preview site environment variable');
         $vercelEnv = $this->generateVercelSiteName();
         $envSource = $this->updateEnvVariable('FRONTEND_URL', $vercelEnv, $envSource);
+        $envSource = $this->updateEnvVariable('VITE_FRONTEND_URL', $vercelEnv, $envSource);
 
         if (!empty($this->getEnvOverrides())) {
             $this->information('Updating environment variables');
