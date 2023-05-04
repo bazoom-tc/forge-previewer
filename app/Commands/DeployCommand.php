@@ -49,6 +49,8 @@ class DeployCommand extends Command
 
     protected Forge $forge;
 
+    private bool $existingSite = false;
+
     public function handle(Forge $forge)
     {
         $this->validateOptions();
@@ -96,14 +98,16 @@ class DeployCommand extends Command
 
         $site->deploySite();
 
-        foreach ($this->option('command') as $i => $command) {
-            if ($i === 0) {
-                $this->information('Executing site command(s)');
-            }
+        if (!$this->existingSite) {
+            foreach ($this->option('command') as $i => $command) {
+                if ($i === 0) {
+                    $this->information('Executing site command(s)');
+                }
 
-            $forge->executeSiteCommand($server->id, $site->id, [
-                'command' => $command,
-            ]);
+                $forge->executeSiteCommand($server->id, $site->id, [
+                    'command' => $command,
+                ]);
+            }
         }
 
         $this->maybeCreateScheduledJob($server);
@@ -205,7 +209,7 @@ class DeployCommand extends Command
         foreach ($sites as $site) {
             if ($site->name === $domain) {
                 $this->information('Found existing site.');
-
+                $this->existingSite = true;
                 return $site;
             }
         }
