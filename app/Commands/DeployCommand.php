@@ -331,7 +331,7 @@ class DeployCommand extends Command
             ->append($this->option('branch'))
             ->limit(49, '-' . str($hash)->substr(0, 6))
             ->append('-bazoom')
-            ->append('.vercel.app');
+            ->append('.preview.bazoom.com');
 
         return str('https://')->append($vercelSiteName);
     }
