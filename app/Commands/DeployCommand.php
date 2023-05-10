@@ -86,6 +86,7 @@ class DeployCommand extends Command
         $vercelEnv = $this->generateVercelSiteName();
         $envSource = $this->updateEnvVariable('FRONTEND_URL', $vercelEnv, $envSource);
         $envSource = $this->updateEnvVariable('VITE_FRONTEND_URL', $vercelEnv, $envSource);
+        $envSource = $this->updateEnvVariable('SANCTUM_STATEFUL_DOMAINS', str_replace('https://', '', $vercelEnv), $envSource);
 
         if (!empty($this->getEnvOverrides())) {
             $this->information('Updating environment variables');
