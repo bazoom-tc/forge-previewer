@@ -328,11 +328,11 @@ class DeployCommand extends Command
     private function generateVercelSiteName(): string
     {
         $hash = hash('sha256', str('git-')->append($this->option('branch'), 'platform'));
-        $vercelSiteName = str('platform-git-')
-            ->append($this->option('branch'))
-            ->limit(49, '-' . str($hash)->substr(0, 6))
-            ->append('.preview.bazoom.com');
-
+        $vercelSiteName = str('platform-git-')->append($this->option('branch'));
+        if (strlen($vercelSiteName) > 56) {
+            $vercelSiteName->limit(49, '-' . str($hash)->substr(0, 6));
+        };
+        $vercelSiteName->append('.preview.bazoom.com');
         return str('https://')->append($vercelSiteName);
     }
 }
