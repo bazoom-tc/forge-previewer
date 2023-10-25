@@ -330,9 +330,9 @@ class DeployCommand extends Command
         $hash = hash('sha256', str('git-')->append($this->option('branch'), 'platform'));
         $vercelSiteName = str('platform-git-')->append($this->option('branch'));
         if (strlen($vercelSiteName) > 56) {
-            $vercelSiteName->limit(49, '-' . str($hash)->substr(0, 6));
+            $vercelSiteName = $vercelSiteName->limit(49, '-' . str($hash)->substr(0, 6));
         };
-        $vercelSiteName->append('.preview.bazoom.com');
+        $vercelSiteName = $vercelSiteName->append('.preview.bazoom.com');
         return str('https://')->append($vercelSiteName);
     }
 }
