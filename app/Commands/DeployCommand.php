@@ -86,8 +86,8 @@ class DeployCommand extends Command
         $vercelEnv = $this->generateVercelSiteName();
         $envSource = $this->updateEnvVariable('FRONTEND_URL', $vercelEnv, $envSource);
         $envSource = $this->updateEnvVariable('VITE_FRONTEND_URL', $vercelEnv, $envSource);
-        $envSource = $this->updateEnvVariable('SANCTUM_STATEFUL_DOMAINS', str_replace('https://', '', $vercelEnv), $envSource);
 
+        $appUrl = null;
         if (!empty($this->getEnvOverrides())) {
             $this->information('Updating environment variables');
 
@@ -95,10 +95,14 @@ class DeployCommand extends Command
                 [$key, $value] = explode(':', $env, 2);
 
                 $envSource = $this->updateEnvVariable($key, $value, $envSource);
+                if ($key === 'APP_URL') {
+                    $appUrl = $value;
+                }
             }
 
         }
 
+        $envSource = $this->updateEnvVariable('SANCTUM_STATEFUL_DOMAINS', implode(',', array_filter([str_replace('https://', '', $vercelEnv), $appUrl])), $envSource);
         $forge->updateSiteEnvironmentFile($server->id, $site->id, $envSource);
 
         $this->information('Deploying');
