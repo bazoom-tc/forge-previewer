@@ -102,7 +102,7 @@ class DeployCommand extends Command
 
         }
 
-        $envSource = $this->updateEnvVariable('SANCTUM_STATEFUL_DOMAINS', implode(',', array_filter([str_replace('https://', '', $vercelEnv), $appUrl])), $envSource);
+        $envSource = $this->updateEnvVariable('SANCTUM_STATEFUL_DOMAINS', implode(',', array_filter([str_replace('https://', '', $vercelEnv), str_replace('https://', '', $appUrl)])), $envSource);
         $forge->updateSiteEnvironmentFile($server->id, $site->id, $envSource);
 
         $this->information('Deploying');
